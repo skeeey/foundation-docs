@@ -2,24 +2,26 @@
 
 ## Symptom
 
-The `Klusterlet` resource cannot be found on the managed cluster, or there is no klusterlet running on a managed cluster.
+The `klusterlet` resource cannot be found on the managed cluster, or there is no klusterlet running on a managed cluster.
+
+## Meaning
+
+The klusterlet is not running on the managed cluster.
+
+## Impact
+
+The status of this managed cluster will be `Unknown` on the hub cluster.
 
 ## Diagnosis
 
-On the managed cluster
-
-1. Check the `Klusterlet` resource with the following command
+1. Get the `Klusterlet` resource with the following command on the managed cluster
 
 ```sh
 oc get klusterlet klusterlet
 ```
 
-If the `Klusterlet` is not found, follow the instructions from [Import managed cluster manually](../../guide/ManagedCluster/ManagedClusterManualImport.md) to reinstall the klusterlet on the managed cluster.
+If the command fails with timeout error, connect the User to ensure the cluster is running and reachable.
 
-2. Check the klusterlet operator pod with the following command
+If the `klusterlet` is not found, refers to [Import managed cluster manually](../../guide/ManagedCluster/ManagedClusterManualImport.md) as a solution to reinstall the klusterlet on the managed cluster.
 
-```sh
-oc -n open-cluster-management-agent get pod -l app=klusterlet
-```
-
-If the pod is not found, follow the instructions from [Import managed cluster manually](../../guide/ManagedCluster/ManagedClusterManualImport.md) to reinstall the klusterlet on the managed cluster.
+Otherwise, refers to the runbook [The `HubConnectionDegraded` condition of `klusterlet` is `True`](../Klusterlets/KlusterletHubConnectionDegradedConditionTrue.md) for further diagnosis. 

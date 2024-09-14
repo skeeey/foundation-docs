@@ -19,7 +19,7 @@ Once this issue happens
 
 ## Diagnosis
 
-1. Check the `ManagedClusterConditionAvailable` condition status on the hub cluster.
+1. Check the status of `ManagedClusterConditionAvailable` condition of your cluster on the hub cluster.
 
 ```sh
 oc get managedcluster <cluster-name> -o jsonpath='{.status.conditions[?(@.type=="ManagedClusterConditionAvailable")].status}'
@@ -27,16 +27,14 @@ oc get managedcluster <cluster-name> -o jsonpath='{.status.conditions[?(@.type==
 
 If the status is `Unknown`, continue the following steps.
 
-2. Refers to the runbooks below for the diagnosis instructions if any condition matches
-- [The `ManagedClusterImportSucceeded` condition of `ManagedCluster` is `False`](./ManagedClusterImportSucceededConditionFalse.md)
-- [The `ManagedClusterJoined` condition of `ManagedCluster` is not present](./ManagedClusterJoinedConditionMissing.md)
-
-3. Check the `status.conditions` of the `Klusterlet` on the managed cluster.
+2. Check the status of `ManagedClusterImportSucceeded` conditions of your cluster on the hub cluster.
 
 ```sh
-oc get klusterlet klusterlet -o yaml
+oc get managedcluster <cluster-name> -o jsonpath='{.status.conditions[?(@.type=="ManagedClusterImportSucceeded")].status}'
 ```
 
-If the command fails with timeout error, ensure the cluster is running and reachable; otherwise refers to the runbooks below for the diagnosis instructions.
-  - [Klusterlet is either not installed or incomplete](../Klusterlets/KlusterletNotInstalledOrIncomplete.md)
-  - [The `HubConnectionDegraded` condition of `klusterlet` is `True`](../Klusterlets/KlusterletHubConnectionDegradedConditionTrue.md)
+If the `ManagedClusterImportSucceeded` condition is `False`, Refers to the runbook [The `ManagedClusterImportSucceeded` condition of `ManagedCluster` is `False`](./ManagedClusterImportSucceededConditionFalse.md) for further diagnosis.
+
+Otherwise, continue the following steps
+
+3. Refers to the runbooks [Klusterlet is either not installed or incomplete](../Klusterlets/KlusterletNotInstalledOrIncomplete.md) for further diagnosis.
