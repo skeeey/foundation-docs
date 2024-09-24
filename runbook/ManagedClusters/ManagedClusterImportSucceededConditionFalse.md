@@ -4,13 +4,7 @@
 
 A managed cluster on the hub cluster has a condition of type `ManagedClusterImportSucceeded` with a `status` of `False`.
 
-## Meaning
-
-The managed cluster is failed to import into the hub cluster.
-
-## Impact
-
-The status of the `ManagedClusterConditionAvailable` condition will be `Unknown`.
+If the  `ManagedClusterImportSucceeded` condition is `False`, it indicates that the managed cluster failed to import into the hub cluster, which will cause the status of managed cluster in the hub cluster to become `Unknown`.
 
 ## Diagnosis
 
@@ -22,18 +16,16 @@ oc get managedcluster <cluster-name> -o jsonpath='{.status.conditions[?(@.type==
 
 If the message is about `manifestworks`, go to the step 2
 
-2. Check the klusterlet ManifestWorks in the cluster namespace on the hub cluster.
+2. Check the ManifestWorks of the managed cluster in the cluster namespace on the hub cluster.
 
 ```sh
 oc -n <cluster-name> get manifestworks <cluster-name>-klusterlet -ojsonpath='{.status.conditions}'
 ```
 
-If the klusterlet `ManifestWork` cannot be found, check the `ManifestWork` CRD on the hub cluster
+If the `ManifestWork` cannot be found, check the `ManifestWork` CRD on the hub cluster
 
 ```sh
-omc get crds manifestworks.work.open-cluster-management.io -ojsonpath='{.metadata.deletionTimestamp}'
+oc get crds manifestworks.work.open-cluster-management.io -ojsonpath='{.metadata.deletionTimestamp}'
 ```
 
-If the `ManifestWork` CRD is not found or it has a deletion timestamp, that means the `ManifestWork` CRD is deleted or deleting, connect the ACM teams to get a solution.
-
-Otherwise, refers to [Import managed cluster manually](../../guide/ManagedCluster/ManagedClusterManualImport.md) as a solution to reinstall the klusterlet on the managed cluster.
+If the `ManifestWork` CRD is not found or it has a deletion timestamp, that means the `ManifestWork` CRD is deleted or deleting, which means the ACM hub control plane is broken. Once this occurs, you need reinstall the ACM hub control plane and reimport your cluster to resolve this problem.
